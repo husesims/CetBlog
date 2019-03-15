@@ -33,7 +33,7 @@ namespace CetBlog.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var category = await _context.Categories.Include(c=>c.Posts)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
