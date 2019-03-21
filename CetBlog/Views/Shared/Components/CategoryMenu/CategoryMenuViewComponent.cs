@@ -1,5 +1,6 @@
 ﻿using CetBlog.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace CetBlog.Views.Shared.Components.CategoryMenu
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            var categories = await dbContext.Categories.ToListAsync();
+            return View(categories);
         }
     }
 }
