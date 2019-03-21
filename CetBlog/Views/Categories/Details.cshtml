@@ -1,29 +1,62 @@
 ﻿@model CetBlog.Models.Category
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Name;
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Category  - @Model.Name</h4>
-    <hr />
-    @foreach (var post in Model.Posts)
-    {
-        <dl class="row">
-            <dt class="col-sm-2">
-                @post.Title
-            </dt>
-            <dd class="col-sm-10">
-              <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary"> Read </a> 
-            </dd>
-        </dl>
 
-    }
 
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+
+<!---->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="Home" asp-action="Index">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a asp-controller="Categories" asp-action="Index">Categories</a>
+    </li>
+    <li class="breadcrumb-item active">@Model.Name</li>
+</ol>
+<!---->
+<!--// mian-content -->
+<!-- banner -->
+<section class="ab-info-main py-5">
+    <div class="container py-lg-3">
+        <div class="ab-info-grids">
+            <h3 class="tittle text-center mb-lg-5 mb-3">@Model.Name's Posts</h3>
+            <div id="products" class="row view-group">
+                @foreach (var post in Model.Posts)
+                {
+                    <div class="item col-lg-4">
+                        <div class="thumbnail card">
+                            <div class="img-event">
+                                <img class="group list-group-image img-fluid" src="~/images/img2.jpg" alt="" />
+                            </div>
+                            <div class="caption card-body">
+                                <h4 class="group card-title inner list-group-item-heading">
+                                   @post.Title
+                                </h4>
+                                <p class="group inner list-group-item-text" style="min-height:180px">
+                                   @post.Content.Substring(0, Math.Min( 200, post.Content.Length)) 
+                                </p>
+                                <div class="row">
+                                    <div class="col-6">
+                                       
+                                    </div>
+                                    <div class="col-6 ban-buttons">
+                                        <a class="btn btn-course"  asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                </div>
+        </div>
+    </div>
+</section>
+<!-- //banner -->
