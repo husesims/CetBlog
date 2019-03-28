@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CetBlog.Data;
 using CetBlog.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CetBlog.Controllers
 {
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public PostsController(ApplicationDbContext context)
+        public PostsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Posts
@@ -57,10 +62,20 @@ namespace CetBlog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,ImageUrl,CreatedDate,CategoryId")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId")] Post post, IFormFile FileUrl)
         {
+            post.CreatedDate = DateTime.Now;
+
             if (ModelState.IsValid)
             {
+               string dirPath = Path.Combine(_hostingEnvironment.WebRootPath,  @"uploads\");
+                var fileName = Guid.NewGuid().ToString().Replace("-", "") + "_" + FileUrl.FileName;
+                using (var fileStream = new FileStream(dirPath+fileName, FileMode.Create))
+                {
+                    await FileUrl.CopyToAsync(fileStream);
+                }
+
+                post.ImageUrl =fileName;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

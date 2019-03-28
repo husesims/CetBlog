@@ -29,7 +29,7 @@
         <div class="speak px-lg-5">
             <div class="row mt-lg-5 mt-4">
                 <div class="col-md-12 events-img">
-                    <img src="~/images/single.jpg" class="img-fluid" alt="user-image" />
+                    <img src="~/uploads/@Model.ImageUrl" class="img-fluid" alt="user-image" />
                 </div>
                 <div class="col-md-12 events-info my-3">
                    @Html.Raw(Model.Content.Replace(System.Environment.NewLine, "<br />"))
