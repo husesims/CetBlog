@@ -10,9 +10,11 @@ using CetBlog.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CetBlog.Controllers
 {
+    [Authorize]
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,14 +25,14 @@ namespace CetBlog.Controllers
             _context = context;
             _hostingEnvironment = hostingEnvironment;
         }
-
+        [AllowAnonymous]
         // GET: Posts
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Posts.Include(p => p.Category);
             return View(await applicationDbContext.ToListAsync());
         }
-
+        [AllowAnonymous]
         // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -41,6 +43,7 @@ namespace CetBlog.Controllers
 
             var post = await _context.Posts
                 .Include(p => p.Category)
+                .Include(p=>p.CetUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
@@ -65,6 +68,12 @@ namespace CetBlog.Controllers
         public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId")] Post post, IFormFile FileUrl)
         {
             post.CreatedDate = DateTime.Now;
+
+
+            var loginUser=await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+            post.CetUserId = loginUser?.Id;
+
 
             if (ModelState.IsValid)
             {

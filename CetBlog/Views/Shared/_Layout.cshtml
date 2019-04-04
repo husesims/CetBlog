@@ -66,8 +66,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                             <ul>
                                 @(await Component.InvokeAsync("CategoryMenu"))
                             </ul>
+
                         </li>
                         <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        @Html.Partial("_LoginPartial")
                     </ul>
                 </nav>
                 <!-- //nav -->

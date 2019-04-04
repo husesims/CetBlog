@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,6 +34,9 @@ namespace CetBlog.Models
         public virtual Category Category { get; set; }
 
         public virtual IList<Comment> Comments { get; set; }
+
+        public string CetUserId { get; set; }
+        public virtual CetUser CetUser { get; set; }
     }
 
     public class Comment
@@ -53,6 +57,21 @@ namespace CetBlog.Models
        
         [ForeignKey("ParentCommentId")]
         public Comment ParentComment { get; set; }
+
+    }
+
+    public class CetUser : IdentityUser
+    {
+        [Required]
+        [StringLength(100)]
+        public string FirstName { get; set; }
+
+
+        [Required]
+        [StringLength(100)]
+        public string LastName { get; set; }
+
+        public DateTime? BirthDate { get; set; }
 
     }
     
