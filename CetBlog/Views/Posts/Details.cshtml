@@ -37,6 +37,10 @@
                 <div class="col-md-12 events-info my-3">
                     <h5>Written by @if (Model.CetUser == null) { <text>Anonymous</text> } else {
                         @Model.CetUser.FirstName @Model.CetUser.LastName } at @Model.CreatedDate.ToLongDateString() </h5>
+                    @if ((User.Identity.IsAuthenticated && Model.CetUser!=null && User.Identity.Name == Model?.CetUser?.UserName)|| (User.IsInRole("admin")))
+                    {
+                    <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Edit</a>
+                    }
                 </div>
 
                 <div class="single-form-left">

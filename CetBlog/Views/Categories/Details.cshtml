@@ -26,7 +26,7 @@
 <section class="ab-info-main py-5">
     <div class="container py-lg-3">
         <div class="ab-info-grids">
-            <h3 class="tittle text-center mb-lg-5 mb-3">@Model.Name's Posts</h3>
+            <h3 class="tittle text-center mb-lg-5 mb-3">@Model.Name's Posts <a asp-controller="Posts" asp-action="create" class="btn btn-outline-primary" > Add an New Post</a></h3>
             <div id="products" class="row view-group">
                 @foreach (var post in Model.Posts)
                 {

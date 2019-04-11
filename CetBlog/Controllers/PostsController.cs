@@ -126,7 +126,18 @@ namespace CetBlog.Controllers
             {
                 try
                 {
-                    _context.Update(post);
+
+                    var currentPost = await _context.Posts.Include(p=>p.CetUser).FirstOrDefaultAsync( p=>p.Id == post.Id);
+                    if(!(currentPost.CetUser?.UserName == User.Identity.Name || User.IsInRole("admin")))
+                    {
+                        return Unauthorized();
+
+                    }
+                    currentPost.Title = post.Title;
+                    currentPost.ImageUrl = post.ImageUrl;
+                    currentPost.Content = post.Content;
+                    currentPost.CategoryId = post.CategoryId;
+                    _context.Update(currentPost);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
