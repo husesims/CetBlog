@@ -1,6 +1,9 @@
-﻿@model CetBlog.Models.Post
+﻿
+@model CetBlog.Models.Post
+
 
 @{
+   
     ViewData["Title"] = Model.Title;
 }
 
@@ -35,11 +38,17 @@
                     @Html.Raw(Model.Content.Replace(System.Environment.NewLine, "<br />"))
                 </div>
                 <div class="col-md-12 events-info my-3">
-                    <h5>Written by @if (Model.CetUser == null) { <text>Anonymous</text> } else {
-                        @Model.CetUser.FirstName @Model.CetUser.LastName } at @Model.CreatedDate.ToLongDateString() </h5>
-                    @if ((User.Identity.IsAuthenticated && Model.CetUser!=null && User.Identity.Name == Model?.CetUser?.UserName)|| (User.IsInRole("admin")))
+                    <h5>
+                        Written by @if (Model.CetUser == null)
+                        {<text>Anonymous</text> }
+                    else
                     {
-                    <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Edit</a>
+                        @Model.CetUser.FirstName @Model.CetUser.LastName} at @Model.CreatedDate.ToLongDateString()
+                    </h5>
+                    @if ((User.Identity.IsAuthenticated && User.Identity.Name == Model?.CetUser?.UserName)
+                    || (User.IsInRole("admin")) || (User.IsInRole("CategoryAdmin") && Model.CategoryId == (ViewData["UserCategoryId"]!=null? (int)ViewData["UserCategoryId"] : 0 ) ))
+                    {
+                    <a asp-controller = "Posts" asp-action = "Edit" asp-route-id = "@Model.Id" class="btn btn-outline-secondary">Edit</a>
                     }
                 </div>
 
@@ -87,6 +96,6 @@
                 </div>
 
             </div>
-    </div>
+        </div>
 </section>
 <!-- //contact -->

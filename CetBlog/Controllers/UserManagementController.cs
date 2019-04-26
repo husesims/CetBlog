@@ -5,12 +5,15 @@ using System.Threading.Tasks;
 using CetBlog.Data;
 using CetBlog.Models;
 using CetBlog.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CetBlog.Controllers
 {
+    [Authorize(Roles="admin")]
     public class UserManagementController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -30,7 +33,7 @@ namespace CetBlog.Controllers
             var userList = _context
                 .Users               
                 .ToList();
-
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", -1);
             List<UserModel> userModelList = new List<UserModel>();
             
             foreach (var item in userList)
@@ -57,7 +60,19 @@ namespace CetBlog.Controllers
             await   _userManager.AddToRoleAsync(user, "admin");
             return RedirectToAction("index");
         }
-
+        [HttpPost]
+        public async Task<ActionResult> MakeCategoryAdmin(string UserId, int CategoryId)
+        {
+            if (!(await _roleManager.RoleExistsAsync("CategoryAdmin")))
+            {
+                await _roleManager.CreateAsync(new IdentityRole { Name = "CategoryAdmin" });
+            }
+            var user = await _userManager.FindByIdAsync(UserId);
+            user.CategoryId = CategoryId;
+            await _context.SaveChangesAsync();
+            await _userManager.AddToRoleAsync(user, "CategoryAdmin");
+            return RedirectToAction("index");
+        }
         public async Task<ActionResult> RemoveAdmin(string id)
         {
            

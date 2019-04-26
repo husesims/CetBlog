@@ -49,7 +49,14 @@ namespace CetBlog.Controllers
             {
                 return NotFound();
             }
-
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewData["UserCategoryId"] = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name)?.CategoryId;
+            }
+            else
+            {
+                ViewData["UserCategoryId"] = null;
+            }
             return View(post);
         }
 

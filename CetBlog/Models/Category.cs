@@ -73,6 +73,9 @@ namespace CetBlog.Models
 
         public DateTime? BirthDate { get; set; }
 
+        public int? CategoryId { get; set; }
+        public virtual Category Category { get; set; }
+
     }
     
 }
